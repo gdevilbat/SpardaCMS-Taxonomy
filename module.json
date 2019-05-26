@@ -1,0 +1,14 @@
+{
+    "name": "Taxonomy",
+    "alias": "taxonomy",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Gdevilbat\\SpardaCMS\\Modules\\Taxonomy\\Providers\\TaxonomyServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
