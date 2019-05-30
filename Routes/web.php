@@ -20,7 +20,15 @@ Route::group(['prefix' => 'control', 'middleware' => 'core.menu'], function() {
 	        =            Taxonomy CMS            =
 	        =============================================*/
 	        
-			    Route::get('master', 'TaxonomyController@index');
+	        Route::get('master', 'TaxonomyController@index')->name('taxonomy')->middleware('can:menu-taxonomy');
+			    Route::get('form', 'TaxonomyController@create')->name('taxonomy');
+			    Route::post('form', 'TaxonomyController@store')->name('taxonomy')->middleware('can:create-taxonomy');
+			    Route::put('form', 'TaxonomyController@store')->name('taxonomy');
+			    Route::delete('form', 'TaxonomyController@destroy')->name('taxonomy');
+
+			    Route::group(['prefix' => 'api'], function() {
+				    Route::get('master', 'TaxonomyController@serviceMaster');
+			    });
 	        
 	        /*=====  End of Taxonomy CMS  ======*/
 		});

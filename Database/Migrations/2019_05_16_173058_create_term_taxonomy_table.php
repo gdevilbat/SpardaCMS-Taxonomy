@@ -15,15 +15,21 @@ class CreateTermTaxonomyTable extends Migration
     {
         Schema::create('term_taxonomy', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('taxonomy');
+            $table->unsignedInteger('term_id');
             $table->text('description')->nullable();
-            $table->unsignedInteger('parent')->nullable();
+            $table->string('taxonomy');
+            $table->unsignedInteger('parent_id')->nullable();
             $table->integer('count')->default(0);
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('modified_by');
             $table->timestamps();
         });
 
         Schema::table('term_taxonomy', function($table){
-            $table->foreign('parent')->references('id')->on('terms')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('term_id')->references('id')->on('terms')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('parent_id')->references('id')->on('terms')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('modified_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
         });
     }
 

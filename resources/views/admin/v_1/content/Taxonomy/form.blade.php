@@ -1,6 +1,6 @@
 @extends('core::admin.'.$theme_cms->value.'.templates.parent')
 
-@section('title_dashboard', 'Terms')
+@section('title_dashboard', 'Taxonomy')
 
 @section('breadcrumb')
         <ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
@@ -18,7 +18,7 @@
             <li class="m-nav__separator">-</li>
             <li class="m-nav__item">
                 <a href="" class="m-nav__link">
-                    <span class="m-nav__link-text">Terms</span>
+                    <span class="m-nav__link-text">Taxonomy</span>
                 </a>
             </li>
         </ul>
@@ -38,14 +38,14 @@
                             <i class="fa fa-gear"></i>
                         </span>
                         <h3 class="m-portlet__head-text">
-                            Terms Form
+                            Taxonomy Form
                         </h3>
                     </div>
                 </div>
             </div>
 
             <!--begin::Form-->
-            <form class="m-form m-form--fit m-form--label-align-right" action="{{action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@store')}}" method="post">
+            <form class="m-form m-form--fit m-form--label-align-right" action="{{action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TaxonomyController@store')}}" method="post">
                 <div class="m-portlet__body">
                     <div class="col-md-5 offset-md-4">
                         @if (!empty(session('global_message')))
@@ -65,29 +65,44 @@
                     </div>
                     <div class="form-group m-form__group d-flex">
                         <div class="col-md-4 d-flex justify-content-end py-3">
-                            <label for="exampleInputEmail1">Term Name<span class="ml-1 m--font-danger" aria-required="true">*</span></label>
+                            <label for="exampleInputEmail1">Taxonomy Term<span class="ml-1 m--font-danger" aria-required="true">*</span></label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" class="form-control m-input slugify" data-target="slug" name="name" placeholder="Terms Name" value="{{old('name') ? old('name') : (!empty($term) ? $term->name : '')}}">
+                            <select name="term_id" class="form-control m-input m-input--solid">
+                                <option value="" selected disabled>-- Choose One --</option>
+                                @foreach ($terms as $term)
+                                    <option value="{{$term->id}}" {{old('term') && old('term') == $term->id ? 'selected' : (!empty($taxonomy) && $taxonomy->term->id == $term->id ? 'selected' : '')}}>-- {{ucfirst($term->name)}} --</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="form-group m-form__group d-flex">
                         <div class="col-md-4 d-flex justify-content-end py-3">
-                            <label for="exampleInputEmail1">Term Slug<span class="ml-1 m--font-danger" aria-required="true">*</span></label>
+                            <label for="exampleInputEmail1">Taxonomy Description</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" class="form-control m-input" name="slug" id="slug" placeholder="Terms Slug" value="{{old('slug') ? old('slug') : (!empty($term) ? $term->slug : '')}}">
+                            <textarea type="text" class="form-control m-input autosize" name="description" placeholder="Taxonomy Description">{{old('description') ? old('description') : (!empty($taxonomy) ? $taxonomy->description : '')}}</textarea>
                         </div>
                     </div>
                     <div class="form-group m-form__group d-flex">
                         <div class="col-md-4 d-flex justify-content-end py-3">
-                            <label for="exampleInputEmail1">Term Group</label>
+                            <label for="exampleInputEmail1">Taxonomy Name<span class="ml-1 m--font-danger" aria-required="true">*</span></label>
                         </div>
                         <div class="col-md-8">
-                            <select name="term_group" class="form-control m-input m-input--solid">
-                                <option value="" selected>-- Non Group --</option>
-                                @foreach ($groups as $group)
-                                    <option value="{{$group->id}}" {{old('term_group') && old('term_group') == $group->id ? 'selected' : (!empty($term->group) && $term->group->id == $group->id ? 'selected' : '')}}>-- {{ucfirst($group->name)}} --</option>
+                            <div class="m-typeahead" id="m-typeahead">
+                                <input type="text" class="form-control m-input typeahead" name="taxonomy" dir="ltr" placeholder="Taxonomy Name" value="{{old('taxonomy') ? old('taxonomy') : (!empty($taxonomy) ? $taxonomy->taxonomy : '')}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group m-form__group d-flex">
+                        <div class="col-md-4 d-flex justify-content-end py-3">
+                            <label for="exampleInputEmail1">Taxonomy Parent</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select name="parent_id" class="form-control m-input m-input--solid">
+                                <option value="" selected>-- Non Parent --</option>
+                                @foreach ($parents as $parent)
+                                    <option value="{{$parent->id}}" {{old('parent_id') && old('parent_id') == $parent->id ? 'selected' : (!empty($taxonomy->parent) && $taxonomy->parent->id == $parent->id ? 'selected' : '')}}>-- {{ucfirst($parent->name)}} --</option>
                                 @endforeach
                             </select>
                         </div>
@@ -120,5 +135,11 @@
 
 @section('page_level_js')
     {{Html::script(module_asset_url('core:assets/js/autosize.min.js'))}}
-    {{Html::script(module_asset_url('core:assets/js/slugify.js'))}}
+@endsection
+
+@section('page_script_js')
+    <script type="text/javascript">
+        var states = {!!($suggestion_name)!!};
+    </script>
+    {{Html::script(module_asset_url('taxonomy:resources/views/admin/'.$theme_cms->value.'/js/taxonomy.js').'?id='.filemtime(module_asset_path('taxonomy:resources/views/admin/'.$theme_cms->value.'/js/taxonomy.js')))}}
 @endsection
