@@ -8,6 +8,9 @@
             "email": "maldinuribrahim@gmail.com"
         }
     ],
+    "require": {
+        "gdevilbat/sparda-cms-core-module": "^5.7"
+    },
     "extra": {
         "laravel": {
             "providers": [

@@ -11,6 +11,37 @@
 |
 */
 
-Route::prefix('taxonomy')->group(function() {
-    Route::get('/', 'TaxonomyController@index');
+Route::group(['prefix' => 'control', 'middleware' => 'core.menu'], function() {
+    
+	Route::group(['middleware' => 'core.auth'], function() {
+
+		Route::group(['prefix' => 'taxonomy'], function() {
+	        /*=============================================
+	        =            Taxonomy CMS            =
+	        =============================================*/
+	        
+			    Route::get('master', 'TaxonomyController@index');
+	        
+	        /*=====  End of Taxonomy CMS  ======*/
+		});
+
+		Route::group(['prefix' => 'terms'], function() {
+	        /*=============================================
+	        =            Taxonomy CMS            =
+	        =============================================*/
+	        
+			    Route::get('master', 'TermsController@index')->name('terms')->middleware('can:menu-taxonomy');
+			    Route::get('form', 'TermsController@create')->name('terms');
+			    Route::post('form', 'TermsController@store')->name('terms')->middleware('can:create-taxonomy');
+			    Route::put('form', 'TermsController@store')->name('terms');
+			    Route::delete('form', 'TermsController@destroy')->name('terms');
+
+			    Route::group(['prefix' => 'api'], function() {
+				    Route::get('master', 'TermsController@serviceMaster');
+			    });
+	        
+	        /*=====  End of Taxonomy CMS  ======*/
+		});
+        
+	});
 });

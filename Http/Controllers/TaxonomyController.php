@@ -4,9 +4,12 @@ namespace Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 
-class TaxonomyController extends Controller
+use Gdevilbat\SpardaCMS\Modules\Core\Http\Controllers\CoreController;
+
+use Gdevilbat\SpardaCMS\Modules\Core\Repositories\Repository;
+
+class TaxonomyController extends CoreController
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +17,7 @@ class TaxonomyController extends Controller
      */
     public function index()
     {
-        return view('taxonomy::index');
+        return view('taxonomy::admin.'.$this->data['theme_cms']->value.'.content.master', $this->data);
     }
 
     /**
