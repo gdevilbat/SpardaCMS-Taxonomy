@@ -19,7 +19,6 @@ class CreateTermTaxonomyTable extends Migration
             $table->text('description')->nullable();
             $table->string('taxonomy');
             $table->unsignedInteger('parent_id')->nullable();
-            $table->integer('count')->default(0);
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('modified_by');
             $table->timestamps();

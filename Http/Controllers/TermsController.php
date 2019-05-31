@@ -243,6 +243,7 @@ class TermsController extends CoreController
     public function destroy(Request $request)
     {
         $query = $this->terms_m->findOrFail(decrypt($request->input('id')));
+        $this->authorize('delete-taxonomy', $query);
 
         try {
             if($query->delete())
