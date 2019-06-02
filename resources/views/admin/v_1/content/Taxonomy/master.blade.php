@@ -87,9 +87,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Term</th>
+                            <th class="no-sort">Term</th>
                             <th>Taxonomy</th>
-                            <th>Parent</th>
+                            <th class="no-sort">Parent</th>
                             <th>Created At</th>
                             <th class="no-sort">Action</th>
                         </tr>

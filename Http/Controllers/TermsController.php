@@ -49,7 +49,7 @@ class TermsController extends CoreController
 
         if($searchValue)
         {
-            $filtered->where(DB::raw("CONCAT(name,'-',slug)"), 'like', '%'.$searchValue.'%');
+            $filtered->where(DB::raw("CONCAT(name,'-',slug,'-',created_at)"), 'like', '%'.$searchValue.'%');
         }
 
         $filteredTotal = $filtered->count();
@@ -212,27 +212,6 @@ class TermsController extends CoreController
     public function show($id)
     {
         return view('taxonomy::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        return view('taxonomy::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

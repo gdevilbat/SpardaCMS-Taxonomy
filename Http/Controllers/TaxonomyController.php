@@ -142,7 +142,7 @@ class TaxonomyController extends CoreController
 
         if($searchValue)
         {
-            $filtered->where(DB::raw("CONCAT(taxonomy)"), 'like', '%'.$searchValue.'%')
+            $filtered->where(DB::raw("CONCAT(taxonomy,'-',created_at)"), 'like', '%'.$searchValue.'%')
                      ->orWhereHas('term', function($query) use ($searchValue){
                         $query->where(DB::raw("CONCAT(name,'-',slug)"), 'like', '%'.$searchValue.'%');
                      })
