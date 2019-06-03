@@ -18,6 +18,10 @@ use DB;
 
 class TaxonomyController extends CoreController
 {
+    protected $module = 'taxonomy';
+    protected $mod_dir = 'Taxonomy';
+    protected $taxonomy = '';
+
     public function __construct()
     {
         parent::__construct();
@@ -33,7 +37,7 @@ class TaxonomyController extends CoreController
      */
     public function index()
     {
-        return view('taxonomy::admin.'.$this->data['theme_cms']->value.'.content.Taxonomy.master', $this->data);
+        return view($this->module.'::admin.'.$this->data['theme_cms']->value.'.content.'.$this->mod_dir.'.master', $this->data);
     }
 
     /**
@@ -50,11 +54,15 @@ class TaxonomyController extends CoreController
         if(isset($_GET['code']))
         {
             $this->data['taxonomy'] = $this->taxonomy_m->with(['term', 'parent'])->where('id', decrypt($_GET['code']))->first();
+            $this->data['parents'] = $this->terms_m->with('taxonomies')->whereDoesntHave('taxonomies', function($query){
+                                                    $query->where('id', decrypt($_GET['code']));
+                                                })
+                                                ->get();
             $this->data['method'] = method_field('PUT');
             $this->authorize('update-taxonomy', $this->data['taxonomy']);
         }
 
-        return view('taxonomy::admin.'.$this->data['theme_cms']->value.'.content.Taxonomy.form', $this->data);
+        return view($this->module.'::admin.'.$this->data['theme_cms']->value.'.content.'.$this->mod_dir.'.form', $this->data);
     }
 
     /**
@@ -137,18 +145,25 @@ class TaxonomyController extends CoreController
 
         $query = $this->taxonomy_m->with(['term', 'parent'])->orderBy($column, $dir);
 
+        if(!empty($this->taxonomy))
+        {
+            $query = $query->where('taxonomy', $this->taxonomy);
+        }
+
         $recordsTotal = $query->count();
         $filtered = $query;
 
         if($searchValue)
         {
-            $filtered->where(DB::raw("CONCAT(taxonomy,'-',created_at)"), 'like', '%'.$searchValue.'%')
-                     ->orWhereHas('term', function($query) use ($searchValue){
-                        $query->where(DB::raw("CONCAT(name,'-',slug)"), 'like', '%'.$searchValue.'%');
-                     })
-                     ->orWhereHas('parent', function($query) use ($searchValue){
-                        $query->where(DB::raw("CONCAT(name,'-',slug)"), 'like', '%'.$searchValue.'%');
-                     });
+            $filtered->where(function($query) use ($searchValue){
+                         $query->where(DB::raw("CONCAT(taxonomy,'-',created_at)"), 'like', '%'.$searchValue.'%')
+                             ->orWhereHas('term', function($query) use ($searchValue){
+                                $query->where(DB::raw("CONCAT(name,'-',slug)"), 'like', '%'.$searchValue.'%');
+                             })
+                             ->orWhereHas('parent', function($query) use ($searchValue){
+                                $query->where(DB::raw("CONCAT(name,'-',slug)"), 'like', '%'.$searchValue.'%');
+                             });
+                    });
         }
 
         $filteredTotal = $filtered->count();
@@ -194,7 +209,7 @@ class TaxonomyController extends CoreController
 
     private function getActionTable($taxonomy)
     {
-        $view = View::make('taxonomy::admin.'.$this->data['theme_cms']->value.'.content.Taxonomy.service_master', [
+        $view = View::make($this->module.'::admin.'.$this->data['theme_cms']->value.'.content.'.$this->mod_dir.'.service_master', [
             'taxonomy' => $taxonomy
         ]);
 

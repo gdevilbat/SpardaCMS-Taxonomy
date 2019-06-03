@@ -26,4 +26,9 @@ class Terms extends Model
     {
     	return $this->belongsTo('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms', 'term_group');
     }
+
+    public function taxonomies()
+    {
+        return $this->hasMany('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy', 'term_id');
+    }
 }
