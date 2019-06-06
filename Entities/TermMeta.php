@@ -8,4 +8,7 @@ class TermMeta extends Model
 {
     protected $fillable = [];
     protected $table = 'termmeta';
+    protected $casts = [
+        'meta_value' => 'array',
+    ];
 }
