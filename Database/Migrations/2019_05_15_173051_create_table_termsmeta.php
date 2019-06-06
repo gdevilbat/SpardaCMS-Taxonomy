@@ -16,7 +16,7 @@ class CreateTableTermsmeta extends Migration
         Schema::create('termmeta', function (Blueprint $table) {
             $table->increments('id');
             $table->string('meta_key');
-            $table->longText('meta_value');
+            $table->longText('meta_value')->nullable();
             $table->unsignedInteger('term_id');
             $table->timestamps();
         });

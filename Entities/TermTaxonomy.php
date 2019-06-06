@@ -18,4 +18,28 @@ class TermTaxonomy extends Model
     {
     	return $this->belongsTo('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms', 'parent_id');
     }
+
+    public function taxonomyChildrens()
+    {
+        return $this->hasManyThrough(
+                        '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy',
+                        '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms',
+                        'id',
+                        'parent_id',
+                        'term_id',
+                        'id'
+        );
+    }
+
+    public function taxonomyParents()
+    {
+        return $this->hasManyThrough(
+                        '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy',
+                        '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms',
+                        'id',
+                        'term_id',
+                        'parent_id',
+                        'id'
+        );
+    }
 }

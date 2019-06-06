@@ -31,4 +31,9 @@ class Terms extends Model
     {
         return $this->hasMany('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy', 'term_id');
     }
+
+    public function termMetas()
+    {
+        return $this->hasMany('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermMeta', 'term_id');
+    }
 }
