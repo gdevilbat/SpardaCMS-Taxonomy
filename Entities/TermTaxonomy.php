@@ -42,4 +42,30 @@ class TermTaxonomy extends Model
                         'id'
         );
     }
+
+    public function getFullSlugAttribute()
+    {
+        $slug = $this->getParentSlug($this->term->slug, $this);
+        $slug = explode("/", $slug);
+        $slug = collect($slug)->reverse()->toArray();
+        $slug = implode('/', $slug);
+
+        return $slug;
+    }
+
+    public function getParentSlug($slug, $object)
+    {
+        $child_slug = null;
+
+        $object = $object->load(['taxonomyParents' => function($query){
+            $query->where('taxonomy', $this->taxonomy);
+        }, 'taxonomyParents.term']);
+
+        if($object->taxonomyParents->count() >0)
+        {
+            $child_slug = '/'.$this->getParentSlug($object->taxonomyParents->first()->term->slug, $object->taxonomyParents->first());
+        }
+
+        return $slug.$child_slug;
+    }
 }
