@@ -16,6 +16,8 @@ class TaxonomyDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+        $this->call(TaxonomyModuleTableSeeder::class);
+        $this->call(TermsTableSeeder::class);
+        $this->call(TaxonomyTableSeeder::class);
     }
 }

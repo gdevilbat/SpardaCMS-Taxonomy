@@ -43,6 +43,16 @@ class TermTaxonomy extends Model
         );
     }
 
+    public function allTaxonomyParents()
+    {
+        return $this->taxonomyParents()->with('allTaxonomyParents');
+    }
+
+    public function allTaxonomyChildrens()
+    {
+        return $this->taxonomyChildrens()->with('allTaxonomyChildrens');
+    }
+
     public function getFullSlugAttribute()
     {
         $slug = $this->getParentSlug($this->term->slug, $this);
@@ -67,5 +77,15 @@ class TermTaxonomy extends Model
         }
 
         return $slug.$child_slug;
+    }
+
+    public static function getTableName()
+    {
+        return with(new Static)->getTable();
+    }
+
+    public static function getPrimaryKey()
+    {
+        return with(new Static)->getKeyName();
     }
 }
