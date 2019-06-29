@@ -25,6 +25,13 @@ class TaxonomyTableSeeder extends Seeder
                 'created_by' => 1,
                 'modified_by' => 1,
                 'created_at' => \Carbon\Carbon::now()
+            ],
+            [
+                'term_id' => 1,
+                'taxonomy' => 'tag',
+                'created_by' => 1,
+                'modified_by' => 1,
+                'created_at' => \Carbon\Carbon::now()
             ]
         ]);
     }
