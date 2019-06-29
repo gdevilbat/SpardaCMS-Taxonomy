@@ -83,7 +83,7 @@ class TaxonomyControllerTest extends TestCase
         $taxonomy = \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::first();
 
         $response = $this->actingAs($user)
-                        ->from(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TaxonomyController@create').'?code='.encrypt($user->getKey()))
+                        ->from(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TaxonomyController@create').'?code='.encrypt($taxonomy->getKey()))
                         ->post(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TaxonomyController@store'), [
                             'taxonomy' => empty($taxonomy->taxonomy) ? $faker->word : $taxonomy->taxonomy,
                             'term_id' => $taxonomy->term_id,

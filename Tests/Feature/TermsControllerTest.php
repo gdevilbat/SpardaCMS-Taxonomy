@@ -98,7 +98,7 @@ class TermsControllerTest extends TestCase
         $terms = \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::first();
 
         $response = $this->actingAs($user)
-                        ->from(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@create').'?code='.encrypt($user->getKey()))
+                        ->from(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@create').'?code='.encrypt($terms->getKey()))
                         ->post(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@store'), [
                             'name' => empty($terms->name) ? $faker->word : $terms->name,
                             'slug' => empty($terms->word) ? $faker->word : $terms->word,
