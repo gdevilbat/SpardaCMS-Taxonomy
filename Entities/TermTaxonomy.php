@@ -25,10 +25,10 @@ class TermTaxonomy extends Model
         return $this->hasManyThrough(
                         '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy',
                         '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms',
-                        'id',
+                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(),
                         'parent_id',
                         'term_id',
-                        'id'
+                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(),
         );
     }
 
@@ -37,10 +37,10 @@ class TermTaxonomy extends Model
         return $this->hasManyThrough(
                         '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy',
                         '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms',
-                        'id',
+                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(),
                         'term_id',
                         'parent_id',
-                        'id'
+                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey()
         );
     }
 
