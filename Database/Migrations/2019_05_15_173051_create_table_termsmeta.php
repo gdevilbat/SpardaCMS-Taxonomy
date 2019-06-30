@@ -14,7 +14,7 @@ class CreateTableTermsmeta extends Migration
     public function up()
     {
         Schema::create('termmeta', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id_termmeta');
             $table->string('meta_key');
             $table->longText('meta_value')->nullable();
             $table->unsignedInteger('term_id');
@@ -22,7 +22,7 @@ class CreateTableTermsmeta extends Migration
         });
 
         Schema::table('termmeta', function($table){
-            $table->foreign('term_id')->references('id')->on('terms')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('term_id')->references(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey())->on('terms')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

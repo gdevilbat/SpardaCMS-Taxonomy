@@ -53,9 +53,9 @@ class TaxonomyController extends CoreController
         $this->data['method'] = method_field('POST');
         if(isset($_GET['code']))
         {
-            $this->data['taxonomy'] = $this->taxonomy_m->with(['term', 'parent'])->where('id', decrypt($_GET['code']))->first();
+            $this->data['taxonomy'] = $this->taxonomy_m->with(['term', 'parent'])->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), decrypt($_GET['code']))->first();
             $this->data['parents'] = $this->terms_m->with('taxonomies')->whereDoesntHave('taxonomies', function($query){
-                                                    $query->where('id', decrypt($_GET['code']));
+                                                    $query->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), decrypt($_GET['code']));
                                                 })
                                                 ->get();
             $this->data['method'] = method_field('PUT');
@@ -90,8 +90,8 @@ class TaxonomyController extends CoreController
         }
         else
         {
-            $data = $request->except('_token', '_method', 'id');
-            $taxonomy = $this->taxonomy_repository->findOrFail(decrypt($request->input('id')));
+            $data = $request->except('_token', '_method', \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey());
+            $taxonomy = $this->taxonomy_repository->findOrFail(decrypt($request->input(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey())));
             $this->authorize('update-taxonomy', $taxonomy);
         }
 
@@ -136,10 +136,10 @@ class TaxonomyController extends CoreController
 
     public function serviceMaster(Request $request)
     {
-        $column = ['id', 'term', 'taxonomy', 'parent', 'created_at'];
+        $column = [\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), 'term', 'taxonomy', 'parent', 'created_at'];
 
         $length = !empty($request->input('length')) ? $request->input('length') : 10 ;
-        $column = !empty($request->input('order.0.column')) ? $column[$request->input('order.0.column')] : 'id' ;
+        $column = !empty($request->input('order.0.column')) ? $column[$request->input('order.0.column')] : \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey() ;
         $dir = !empty($request->input('order.0.dir')) ? $request->input('order.0.dir') : 'DESC' ;
         $searchValue = $request->input('search')['value'];
 
@@ -183,7 +183,7 @@ class TaxonomyController extends CoreController
             {
                 if(Auth::user()->can('read-taxonomy', $taxonomy))
                 {
-                    $data[$i][0] = $taxonomy->id;
+                    $data[$i][0] = $taxonomy->getKey();
                     $data[$i][1] = $taxonomy->term->name;
                     $data[$i][2] = $taxonomy->taxonomy;
 
@@ -256,7 +256,7 @@ class TaxonomyController extends CoreController
      */
     public function destroy(Request $request)
     {
-        $query = $this->taxonomy_m->findOrFail(decrypt($request->input('id')));
+        $query = $this->taxonomy_m->findOrFail(decrypt($request->input(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey())));
         $this->authorize('delete-taxonomy', $query);
 
         try {

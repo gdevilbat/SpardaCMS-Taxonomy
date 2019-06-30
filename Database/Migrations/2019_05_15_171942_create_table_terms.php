@@ -14,7 +14,7 @@ class CreateTableTerms extends Migration
     public function up()
     {
         Schema::create('terms', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id_terms');
             $table->string('name');
             $table->string('slug')->unique();
             $table->unsignedInteger('term_group')->nullable();
@@ -25,7 +25,7 @@ class CreateTableTerms extends Migration
         });
 
         Schema::table('terms', function($table){
-            $table->foreign('term_group')->references('id')->on('terms')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('term_group')->references(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey())->on('terms')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('modified_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
         });

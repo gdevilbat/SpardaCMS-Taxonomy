@@ -14,7 +14,7 @@ class CreateTermTaxonomyTable extends Migration
     public function up()
     {
         Schema::create('term_taxonomy', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id_term_taxonomy');
             $table->unsignedInteger('term_id');
             $table->text('description')->nullable();
             $table->string('taxonomy');
@@ -25,8 +25,8 @@ class CreateTermTaxonomyTable extends Migration
         });
 
         Schema::table('term_taxonomy', function($table){
-            $table->foreign('term_id')->references('id')->on('terms')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('parent_id')->references('id')->on('terms')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('term_id')->references(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey())->on('terms')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('parent_id')->references(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey())->on('terms')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('modified_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
         });

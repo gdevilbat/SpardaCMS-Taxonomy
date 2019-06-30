@@ -10,6 +10,7 @@ class Terms extends Model
 {
     protected $fillable = [];
     protected $table = 'terms';
+    protected $primaryKey = 'id_terms';
 
     /**
      * Set the user's Slug.

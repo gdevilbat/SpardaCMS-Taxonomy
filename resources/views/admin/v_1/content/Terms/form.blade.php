@@ -87,7 +87,7 @@
                             <select name="term_group" class="form-control m-input m-input--solid">
                                 <option value="" selected>-- Non Group --</option>
                                 @foreach ($groups as $group)
-                                    <option value="{{$group->id}}" {{old('term_group') && old('term_group') == $group->id ? 'selected' : (!empty($term->group) && $term->group->id == $group->id ? 'selected' : '')}}>-- {{ucfirst($group->name)}} --</option>
+                                    <option value="{{$group->getKey()}}" {{old('term_group') && old('term_group') == $group->getKey() ? 'selected' : (!empty($term->group) && $term->group->getKey() == $group->getKey() ? 'selected' : '')}}>-- {{ucfirst($group->name)}} --</option>
                                 @endforeach
                             </select>
                         </div>
@@ -95,7 +95,7 @@
                 </div>
                 {{csrf_field()}}
                 @if(isset($_GET['code']))
-                    <input type="hidden" name="id" value="{{$_GET['code']}}">
+                    <input type="hidden" name="{{\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey()}}" value="{{$_GET['code']}}">
                 @endif
                 {{$method}}
                 <div class="m-portlet__foot m-portlet__foot--fit">

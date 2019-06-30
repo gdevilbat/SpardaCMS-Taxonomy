@@ -35,10 +35,10 @@ class TermsController extends CoreController
 
     public function serviceMaster(Request $request)
     {
-        $column = ['id', 'name', 'slug', 'group', 'created_at'];
+        $column = [\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(), 'name', 'slug', 'group', 'created_at'];
 
         $length = !empty($request->input('length')) ? $request->input('length') : 10 ;
-        $column = !empty($request->input('order.0.column')) ? $column[$request->input('order.0.column')] : 'id' ;
+        $column = !empty($request->input('order.0.column')) ? $column[$request->input('order.0.column')] : \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey() ;
         $dir = !empty($request->input('order.0.dir')) ? $request->input('order.0.dir') : 'DESC' ;
         $searchValue = $request->input('search')['value'];
 
@@ -69,7 +69,7 @@ class TermsController extends CoreController
             {
                 if(Auth::user()->can('read-taxonomy', $term))
                 {
-                    $data[$i][0] = $term->id;
+                    $data[$i][0] = $term->getKey();
                     $data[$i][1] = $term->name;
                     $data[$i][2] = $term->slug;
 
@@ -114,8 +114,8 @@ class TermsController extends CoreController
         $this->data['groups'] = $this->terms_m->all();
         if(isset($_GET['code']))
         {
-            $this->data['term'] = $this->terms_m->with('group')->where('id', decrypt($_GET['code']))->first();
-            $this->data['groups'] = $this->terms_m->where('id', '!=', decrypt($_GET['code']))->get();
+            $this->data['term'] = $this->terms_m->with('group')->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(), decrypt($_GET['code']))->first();
+            $this->data['groups'] = $this->terms_m->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(), '!=', decrypt($_GET['code']))->get();
             $this->data['method'] = method_field('PUT');
             $this->authorize('update-taxonomy', $this->data['term']);
         }
@@ -143,7 +143,7 @@ class TermsController extends CoreController
         else
         {
             $validator->addRules([
-                'slug' => 'max:191|unique:'.$this->terms_m->getTable().',slug,'.decrypt($request->input('id')).',id'
+                'slug' => 'max:191|unique:'.$this->terms_m->getTable().',slug,'.decrypt($request->input(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey())).','.\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey()
             ]);
         }
 
@@ -160,8 +160,8 @@ class TermsController extends CoreController
         }
         else
         {
-            $data = $request->except('_token', '_method', 'id');
-            $term = $this->terms_repository->findOrFail(decrypt($request->input('id')));
+            $data = $request->except('_token', '_method', \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey());
+            $term = $this->terms_repository->findOrFail(decrypt($request->input(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey())));
             $this->authorize('update-taxonomy', $term);
         }
 
@@ -221,7 +221,7 @@ class TermsController extends CoreController
      */
     public function destroy(Request $request)
     {
-        $query = $this->terms_m->findOrFail(decrypt($request->input('id')));
+        $query = $this->terms_m->findOrFail(decrypt($request->input(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey())));
         $this->authorize('delete-taxonomy', $query);
 
         try {

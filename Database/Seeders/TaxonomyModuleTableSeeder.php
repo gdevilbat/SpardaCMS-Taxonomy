@@ -23,6 +23,7 @@ class TaxonomyModuleTableSeeder extends Seeder
                 'name' => 'Taxonomy',
                 'slug' => 'taxonomy',
                 'scope' => json_encode(array('menu', 'create', 'read', 'update', 'delete')),
+                'is_scanable' => '1',
                 'created_at' => \Carbon\Carbon::now()
             ]
         ]);
