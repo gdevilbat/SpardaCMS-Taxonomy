@@ -48,8 +48,9 @@ class TaxonomyTest extends DuskTestCase
     public function testEditTaxonomy()
     {
         $user = \App\User::find(1);
+        $faker = \Faker\Factory::create();
 
-        $this->browse(function (Browser $browser) use ($user) {
+        $this->browse(function (Browser $browser) use ($user, $faker) {
 
             $browser->loginAs($user)
                     ->visit(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TaxonomyController@index'))
@@ -58,7 +59,13 @@ class TaxonomyTest extends DuskTestCase
                     ->clickLink('Actions')
                     ->clickLink('Edit')
                     ->AssertSee('Taxonomy Form')
-                    ->press('Submit')
+                    ->type('taxonomy', $faker->word)
+                    ->type('description', $faker->text);
+
+            $browser->script('document.getElementsByName("term_id")[0].selectedIndex = 1');
+            $browser->script('document.getElementsByName("parent_id")[0].selectedIndex = 1');
+            
+            $browser->press('Submit')
                     ->waitForText('Master Data of Taxonomy')
                     ->assertSee('Successfully Update Taxonomy!');
         });

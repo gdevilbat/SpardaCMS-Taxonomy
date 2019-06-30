@@ -46,8 +46,9 @@ class TermsTest extends DuskTestCase
     public function testEditTerms()
     {
         $user = \App\User::find(1);
+        $faker = \Faker\Factory::create();
 
-        $this->browse(function (Browser $browser) use ($user) {
+        $this->browse(function (Browser $browser) use ($user, $faker) {
 
             $browser->loginAs($user)
                     ->visit(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@index'))
@@ -55,6 +56,8 @@ class TermsTest extends DuskTestCase
                     ->waitForText('Actions')
                     ->clickLink('Actions')
                     ->clickLink('Edit')
+                    ->type('name', $faker->word)
+                    ->type('slug', $faker->word)
                     ->AssertSee('Terms Form')
                     ->press('Submit')
                     ->waitForText('Master Data of Terms')
