@@ -28,7 +28,7 @@ class TermTaxonomy extends Model
                         \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(),
                         'parent_id',
                         'term_id',
-                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(),
+                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey()
         );
     }
 
