@@ -83,7 +83,7 @@
                 @endcan
 
                 <!--begin: Datatable -->
-                <table class="table table-striped" id="data-term" width="100%">
+                <table class="table table-striped data-table-ajax" data-ajax="{{action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@serviceMaster')}}" id="data-term" width="100%">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -116,25 +116,4 @@
     {{Html::script(module_asset_url('core:assets/metronic-v5/global/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js'))}}
     {{Html::script(module_asset_url('core:assets/js/autosize.min.js'))}}
     {{Html::script('vendor/laravel-filemanager/js/lfm.js')}}
-@endsection
-
-@section('page_script_js')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#data-term').DataTable( {
-                "processing": true,
-                "serverSide": true,
-                "order": [],
-                "ajax": $.fn.dataTable.pipeline( {
-                    url: '{{action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@serviceMaster')}}',
-                    pages: 5 // number of pages to cache
-                }),
-                 "columnDefs": [
-                ],
-                "drawCallback": function( settings ) {
-                    deleteData();
-                }
-            } );
-        } );
-    </script>
 @endsection
