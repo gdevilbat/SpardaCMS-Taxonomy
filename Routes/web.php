@@ -28,6 +28,7 @@ Route::group(['prefix' => 'control', 'middleware' => 'core.menu'], function() {
 
 			    Route::group(['prefix' => 'api'], function() {
 				    Route::get('master', 'TaxonomyController@serviceMaster');
+				    Route::get('suggestion-tag', 'TaxonomyController@getSuggestionTag');
 			    });
 	        
 	        /*=====  End of Taxonomy CMS  ======*/

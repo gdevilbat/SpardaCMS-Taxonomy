@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Gdevilbat\SpardaCMS\Modules\Taxonomy\Foundation\AbstractTaxonomy;
 
 use Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy as Taxonomy_m;
+use Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms as Terms_m;
 
 use Validator;
 use Auth;
@@ -22,7 +23,6 @@ class TaxonomyController extends AbstractTaxonomy
         $this->taxonomy = '';
 
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -91,5 +91,13 @@ class TaxonomyController extends AbstractTaxonomy
                 return redirect()->back()->with('global_message', array('status' => 400, 'message' => 'Failed To Update Taxonomy!'));
             }
         }
+    }
+
+    public function getSuggestionTag()
+    {
+        return Terms_m::whereHas('taxonomies', function($query){
+                    $query->where('taxonomy', 'tag');
+                })
+                ->pluck('slug');
     }
 }
