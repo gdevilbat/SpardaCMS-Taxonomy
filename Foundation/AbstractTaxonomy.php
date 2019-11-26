@@ -47,20 +47,22 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
      */
     public function create()
     {
-        $terms = $this->terms_repository->all();
-        $this->data['terms'] = $terms;
-        $this->data['parents'] = $terms;
+        $this->data['terms'] = $this->terms_repository->all();
         $this->data['suggestion_name'] = $this->taxonomy_m->groupBy('taxonomy')->pluck('taxonomy');
         $this->data['method'] = method_field('POST');
         if(isset($_GET['code']))
         {
             $this->data['taxonomy'] = $this->taxonomy_m->with(['term', 'parent'])->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), decrypt($_GET['code']))->first();
-            $this->data['parents'] = $this->terms_m->with('taxonomies')->whereDoesntHave('taxonomies', function($query){
+            $this->data['parents'] = $this->getParentQuery()->with('taxonomies')->whereDoesntHave('taxonomies', function($query){
                                                     $query->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), decrypt($_GET['code']));
                                                 })
                                                 ->get();
             $this->data['method'] = method_field('PUT');
             $this->authorize('update-taxonomy', $this->data['taxonomy']);
+        }
+        else
+        {
+            $this->data['parents'] = $this->getParentQuery()->get();
         }
 
         return view($this->getModule().'::admin.'.$this->data['theme_cms']->value.'.content.'.$this->getModDir().'.form', $this->data);

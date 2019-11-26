@@ -93,6 +93,11 @@ class TaxonomyController extends AbstractTaxonomy
         }
     }
 
+    public function getParentQuery()
+    {
+        return $this->terms_m;
+    }
+
     public function getSuggestionTag()
     {
         return Terms_m::whereHas('taxonomies', function($query){

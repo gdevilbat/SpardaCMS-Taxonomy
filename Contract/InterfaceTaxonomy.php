@@ -41,6 +41,13 @@ interface InterfaceTaxonomy
      */
     public function destroy(Request $request);
 
+    /* Update a resource
+     * @param  $model
+     * @param  array $data
+     * @return $model
+     */
+    public function getParentQuery();
+
     /**
      * Update a resource
      * @param  $model
