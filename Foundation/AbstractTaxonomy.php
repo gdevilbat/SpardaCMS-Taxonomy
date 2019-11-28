@@ -76,7 +76,7 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
         $dir = !empty($request->input('order.0.dir')) ? $request->input('order.0.dir') : 'DESC' ;
         $searchValue = $request->input('search')['value'];
 
-        $query = $this->taxonomy_m->with(['term', 'parent'])->orderBy($column, $dir);
+        $query = $this->taxonomy_m->with(['term', 'parent.term'])->orderBy($column, $dir);
 
         if(!empty($this->taxonomy))
         {
@@ -122,7 +122,7 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
 
                     if(!empty($taxonomy->parent))
                     {
-                        $data[$i][3] = '<span class="badge badge-danger">'.$taxonomy->parent->name.'</span>';
+                        $data[$i][3] = '<span class="badge badge-danger">'.$taxonomy->parent->term->name.'</span>';
                     }
                     else
                     {

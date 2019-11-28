@@ -17,7 +17,7 @@ class TermTaxonomy extends Model
 
     public function parent()
     {
-    	return $this->belongsTo('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms', 'parent_id');
+    	return $this->belongsTo(TermTaxonomy::class, 'parent_id');
     }
 
     public function taxonomyChildrens()
