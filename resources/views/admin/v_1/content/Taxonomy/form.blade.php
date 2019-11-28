@@ -71,7 +71,11 @@
                             <select name="term_id" class="form-control m-input m-input--solid">
                                 <option value="" selected disabled>-- Choose One --</option>
                                 @foreach ($terms as $term)
-                                    <option value="{{$term->getKey()}}" {{old('term') && old('term') == $term->getKey() ? 'selected' : (!empty($taxonomy) && $taxonomy->term->getKey() == $term->getKey() ? 'selected' : '')}}>-- {{ucfirst($term->name)}} --</option>
+                                    @if(old('term_id'))
+                                        <option value="{{$term->getKey()}}" {{old('term_id') && old('term_id') == $term->getKey() ? 'selected' : ''}}>-- {{ucfirst($term->name)}} --</option>
+                                    @else
+                                        <option value="{{$term->getKey()}}" {{!empty($taxonomy) && $taxonomy->term->getKey() == $term->getKey() ? 'selected' : ''}}>-- {{ucfirst($term->name)}} --</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -99,10 +103,14 @@
                             <label for="exampleInputEmail1">Taxonomy Parent</label>
                         </div>
                         <div class="col-md-8">
-                            <select name="parent_id" class="form-control m-input m-input--solid">
+                            <select name="parent_id" class="form-control m-input m-input--solid select2">
                                 <option value="" selected>-- Non Parent --</option>
                                 @foreach ($parents as $parent)
-                                    <option value="{{$parent->getKey()}}" {{old('parent_id') && old('parent_id') == $parent->getKey() ? 'selected' : (!empty($taxonomy->parent) && $taxonomy->parent->getKey() == $parent->getKey() ? 'selected' : '')}}>-- {{ucfirst($parent->name)}} --</option>
+                                    @if(old('parent_id'))
+                                        <option value="{{$parent->getKey()}}" {{old('parent_id') && old('parent_id') == $parent->getKey() ? 'selected' : ''}}>-- {{ucfirst($parent->term->name)}} | {{$parent->taxonomy}} --</option>
+                                    @else
+                                        <option value="{{$parent->getKey()}}" {{!empty($taxonomy->parent) && $taxonomy->parent->getKey() == $parent->getKey() ? 'selected' : ''}}>-- {{ucfirst($parent->term->name)}} | {{$parent->taxonomy}} --</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

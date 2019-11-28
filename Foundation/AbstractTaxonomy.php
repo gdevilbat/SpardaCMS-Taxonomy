@@ -53,9 +53,8 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
         if(isset($_GET['code']))
         {
             $this->data['taxonomy'] = $this->taxonomy_m->with(['term', 'parent'])->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), decrypt($_GET['code']))->first();
-            $this->data['parents'] = $this->getParentQuery()->with('taxonomies')->whereDoesntHave('taxonomies', function($query){
-                                                    $query->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), decrypt($_GET['code']));
-                                                })
+            $this->data['parents'] = $this->getParentQuery()
+                                                ->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), '!=', decrypt($_GET['code']))
                                                 ->get();
             $this->data['method'] = method_field('PUT');
             $this->authorize('update-taxonomy', $this->data['taxonomy']);
