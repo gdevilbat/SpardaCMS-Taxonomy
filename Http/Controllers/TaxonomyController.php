@@ -43,11 +43,7 @@ class TaxonomyController extends AbstractTaxonomy
                     'parent_id' => [
                         function ($attribute, $value, $fail) use ($request) {
                             if ($request->input('taxonomy') != Taxonomy_m::where(Taxonomy_m::getPrimaryKey(), $request->input('parent_id'))->firstOrFail()->taxonomy) {
-                                $fail($attribute.' Must Have Sama Taxonomy Name with Parent');
-                            }
-
-                            if ($request->input('taxonomy') != Taxonomy_m::where(Taxonomy_m::getPrimaryKey(), $request->input('parent_id'))->firstOrFail()->taxonomy) {
-                                $fail($attribute.' Must Have Sama Taxonomy Name with Parent');
+                                $fail($attribute.' Must Have Same Taxonomy Name with Parent');
                             }
                         },
                 ],      

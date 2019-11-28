@@ -56,14 +56,14 @@ class TaxonomyControllerTest extends TestCase
                          ->post(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TaxonomyController@store'), [
                                 'term_id' => $term->getKey(),
                                 'taxonomy' => $name,
-                                'parent_id' => $term->getKey()
+                                //'parent_id' => $term->getKey() disable because parent id must be same
                             ])
                          ->assertStatus(302)
+                         ->assertSessionHasNoErrors() //Return Valid, Data Complete
                          ->assertRedirect(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TaxonomyController@index'))
-                         ->assertSessionHas('global_message.status', 200)
-                         ->assertSessionHasNoErrors(); //Return Valid, Data Complete
+                         ->assertSessionHas('global_message.status', 200);
 
-        $this->assertDatabaseHas(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getTableName(), ['taxonomy' => $name, 'term_id' => $term->getKey(), 'parent_id' => $term->getKey()]);
+        $this->assertDatabaseHas(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getTableName(), ['taxonomy' => $name, 'term_id' => $term->getKey()/*, 'parent_id' => $term->getKey()*/]);
     }
 
     public function testUpdateDataTaxonomy()
