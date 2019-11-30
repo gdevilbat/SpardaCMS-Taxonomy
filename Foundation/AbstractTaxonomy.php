@@ -69,14 +69,19 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
 
     public function serviceMaster(Request $request)
     {
-        $column = [\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), 'term', 'taxonomy', 'parent', 'created_at'];
+        $column = [\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), 'name', 'taxonomy', 'parent_name', 'created_at'];
 
         $length = !empty($request->input('length')) ? $request->input('length') : 10 ;
         $column = !empty($request->input('order.0.column')) ? $column[$request->input('order.0.column')] : \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey() ;
         $dir = !empty($request->input('order.0.dir')) ? $request->input('order.0.dir') : 'DESC' ;
         $searchValue = $request->input('search')['value'];
 
-        $query = $this->taxonomy_m->with(['term', 'parent.term'])->orderBy($column, $dir);
+        $query = $this->taxonomy_m->leftJoin(Terms_m::getTableName(), Terms_m::getTableName().'.'.Terms_m::getPrimaryKey(), '=', Taxonomy_m::getTableName().'.term_id')
+                                  ->leftJoin(Taxonomy_m::getTableName().' as child', Taxonomy_m::getTableName().'.parent_id', '=', 'child.'.Taxonomy_m::getPrimaryKey())
+                                  ->leftJoin(Terms_m::getTableName().' as parent', 'child.term_id', '=', 'parent.'.Terms_m::getPrimaryKey())
+                                  ->with(['term', 'parent.term'])
+                                  ->select(Taxonomy_m::getTableName().'.*', Terms_m::getTableName().'.name', 'parent.name as parent_name')
+                                  ->orderBy($column, $dir);
 
         if(!empty($this->taxonomy))
         {

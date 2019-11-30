@@ -35,14 +35,17 @@ class TermsController extends CoreController
 
     public function serviceMaster(Request $request)
     {
-        $column = [\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(), 'name', 'slug', 'group', 'created_at'];
+        $column = [\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(), 'name', 'slug', 'parent_name', 'created_at'];
 
         $length = !empty($request->input('length')) ? $request->input('length') : 10 ;
         $column = !empty($request->input('order.0.column')) ? $column[$request->input('order.0.column')] : \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey() ;
         $dir = !empty($request->input('order.0.dir')) ? $request->input('order.0.dir') : 'DESC' ;
         $searchValue = $request->input('search')['value'];
 
-        $query = $this->terms_m->with('group')->orderBy($column, $dir);
+        $query = $this->terms_m->leftJoin(Terms_m::getTableName().' as group', 'group.'.Terms_m::getPrimaryKey(), '=', Terms_m::getTableName().'.term_group')
+                               ->with('group')
+                               ->orderBy($column, $dir)
+                               ->select(Terms_m::getTableName().'.*', 'group.name as parent_name');
 
         $recordsTotal = $query->count();
         $filtered = $query;
@@ -89,7 +92,7 @@ class TermsController extends CoreController
             }
         
         /*=====  End of Parsing Datatable  ======*/
-        
+
         return ['data' => $data, 'draw' => (integer)$request->input('draw'), 'recordsTotal' => $recordsTotal, 'recordsFiltered' => $filteredTotal];
     }
 
