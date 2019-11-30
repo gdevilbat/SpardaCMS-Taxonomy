@@ -85,7 +85,7 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
 
         if(!empty($this->taxonomy))
         {
-            $query = $query->where('taxonomy', $this->getTaxonomy());
+            $query = $query->where(Taxonomy_m::getTableName().'.taxonomy', $this->getTaxonomy());
         }
 
         $recordsTotal = $query->count();
