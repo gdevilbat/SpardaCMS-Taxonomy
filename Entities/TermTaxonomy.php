@@ -17,41 +17,22 @@ class TermTaxonomy extends Model
 
     public function parent()
     {
-    	return $this->belongsTo(TermTaxonomy::class, 'parent_id');
+        return $this->belongsTo(TermTaxonomy::class, 'parent_id');
     }
 
-    public function taxonomyChildrens()
+    public function childrens()
     {
-        return $this->hasManyThrough(
-                        '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy',
-                        '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms',
-                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(),
-                        'parent_id',
-                        'term_id',
-                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey()
-        );
-    }
-
-    public function taxonomyParents()
-    {
-        return $this->hasManyThrough(
-                        '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy',
-                        '\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms',
-                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(),
-                        'term_id',
-                        'parent_id',
-                        \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey()
-        );
+    	return $this->hasMany(TermTaxonomy::class, 'parent_id');
     }
 
     public function allTaxonomyParents()
     {
-        return $this->taxonomyParents()->with('allTaxonomyParents');
+        return $this->parent()->with('allTaxonomyParents.term');
     }
 
     public function allTaxonomyChildrens()
     {
-        return $this->taxonomyChildrens()->with('allTaxonomyChildrens');
+        return $this->childrens()->with('allTaxonomyChildrens.term');
     }
 
     public function getFullSlugAttribute()
