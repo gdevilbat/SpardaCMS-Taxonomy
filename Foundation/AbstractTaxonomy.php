@@ -98,7 +98,7 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
                              ->orWhereHas('term', function($query) use ($searchValue){
                                 $query->where(DB::raw("CONCAT(".Terms_m::getTableName().".name,'-',".Terms_m::getTableName().".slug)"), 'like', '%'.$searchValue.'%');
                              })
-                             ->orWhereHas('parent', function($query) use ($searchValue){
+                             ->orWhereHas('parent.term', function($query) use ($searchValue){
                                 $query->where(DB::raw("CONCAT(".Terms_m::getTableName().".name,'-',".Terms_m::getTableName().".slug)"), 'like', '%'.$searchValue.'%');
                              });
                     });
