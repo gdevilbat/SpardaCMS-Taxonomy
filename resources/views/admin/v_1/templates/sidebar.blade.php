@@ -7,11 +7,8 @@
          </a>
         <div class="m-menu__submenu "><span class="m-menu__arrow"></span>
             <ul class="m-menu__subnav">
+                <li class="m-menu__item  m-menu__item--parent" aria-haspopup="true"><span class="m-menu__link"><span class="m-menu__link-text">Taxonomies</span></span></li>
                 <li class="m-menu__item  {{Route::current()->getName() ==  'terms' ? 'm-menu__item--active' : ''}}" aria-haspopup="true"><a href="{{action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@index')}}" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Terms</span></a></li>
-            </ul>
-        </div>
-        <div class="m-menu__submenu "><span class="m-menu__arrow"></span>
-            <ul class="m-menu__subnav">
                 <li class="m-menu__item  {{Route::current()->getName() ==  'taxonomy' ? 'm-menu__item--active' : ''}}" aria-haspopup="true"><a href="{{action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TaxonomyController@index')}}" class="m-menu__link "><i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i><span class="m-menu__link-text">Taxonomy</span></a></li>
             </ul>
         </div>
