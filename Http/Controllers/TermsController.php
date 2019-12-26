@@ -21,7 +21,7 @@ class TermsController extends CoreController
     {
         parent::__construct();
         $this->terms_m = new Terms_m;
-        $this->terms_repository = new Repository(new Terms_m);
+        $this->terms_repository = new Repository(new Terms_m, resolve(\Gdevilbat\SpardaCMS\Modules\Role\Repositories\Contract\AuthenticationRepository::class));
     }
 
     /**

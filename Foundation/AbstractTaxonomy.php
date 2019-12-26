@@ -27,9 +27,9 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
     {
         parent::__construct();
         $this->taxonomy_m = new Taxonomy_m;
-        $this->taxonomy_repository = new Repository(new Taxonomy_m);
+        $this->taxonomy_repository = new Repository(new Taxonomy_m, resolve(\Gdevilbat\SpardaCMS\Modules\Role\Repositories\Contract\AuthenticationRepository::class));
         $this->terms_m = new Terms_m;
-        $this->terms_repository = new Repository(new Terms_m);
+        $this->terms_repository = new Repository(new Terms_m, resolve(\Gdevilbat\SpardaCMS\Modules\Role\Repositories\Contract\AuthenticationRepository::class));
     }
 
     /**
