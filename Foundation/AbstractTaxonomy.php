@@ -170,11 +170,11 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
         try {
             if($query->delete())
             {
-                return redirect()->back()->with('global_message', array('status' => 200,'message' => 'Successfully Delete Taxonomy!'));
+                return redirect(action('\\'.get_class($this).'@index'))->with('global_message', array('status' => 200,'message' => 'Successfully Delete Taxonomy!'));
             }
             
         } catch (\Exception $e) {
-            return redirect()->back()->with('global_message', array('status' => 200,'message' => 'Failed Delete Taxonomy, It\'s Has Been Used!'));
+            return redirect(action('\\'.get_class($this).'@index'))->with('global_message', array('status' => 200,'message' => 'Failed Delete Taxonomy, It\'s Has Been Used!'));
         }
     }
 
