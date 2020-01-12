@@ -49,13 +49,13 @@ class TermTaxonomy extends Model
     {
         $child_slug = null;
 
-        $object = $object->load(['taxonomyParents' => function($query){
+        $object = $object->load(['parent' => function($query){
             $query->where('taxonomy', $this->taxonomy);
-        }, 'taxonomyParents.term']);
+        }, 'parent.term']);
 
-        if($object->taxonomyParents->count() >0)
+        if(!empty($object->parent))
         {
-            $child_slug = '/'.$this->getParentSlug($object->taxonomyParents->first()->term->slug, $object->taxonomyParents->first());
+            $child_slug = '/'.$this->getParentSlug($object->parent->term->slug, $object->parent);
         }
 
         return $slug.$child_slug;
