@@ -32,7 +32,7 @@ class TaxonomyTest extends DuskTestCase
                     ->type('description', $faker->text);
 
             $browser->script('document.getElementsByName("term_id")[0].selectedIndex = 1');
-            $browser->script('document.getElementsByName("parent_id")[0].selectedIndex = 1');
+            $browser->script('document.getElementsByName("parent_id")[0].selectedIndex = 0');
 
             $browser->press('Submit')
                     ->waitForText('Master Data of Taxonomy')
@@ -63,7 +63,7 @@ class TaxonomyTest extends DuskTestCase
                     ->type('description', $faker->text);
 
             $browser->script('document.getElementsByName("term_id")[0].selectedIndex = 1');
-            $browser->script('document.getElementsByName("parent_id")[0].selectedIndex = 1');
+            $browser->script('document.getElementsByName("parent_id")[0].selectedIndex = 0');
             
             $browser->press('Submit')
                     ->waitForText('Master Data of Taxonomy')
