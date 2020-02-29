@@ -52,7 +52,7 @@ class TermsController extends CoreController
 
         if($searchValue)
         {
-            $filtered->where(DB::raw("CONCAT(name,'-',slug,'-',created_at)"), 'like', '%'.$searchValue.'%');
+            $filtered->where(DB::raw("CONCAT(".Terms_m::getTableName().".name,'-',".Terms_m::getTableName().".slug,'-',".Terms_m::getTableName().".created_at)"), 'like', '%'.$searchValue.'%');
         }
 
         $filteredTotal = $filtered->count();
