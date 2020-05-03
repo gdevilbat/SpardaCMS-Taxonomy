@@ -134,6 +134,6 @@ class TaxonomyController extends AbstractTaxonomy
         return Terms_m::whereHas('taxonomies', function($query){
                     $query->where('taxonomy', 'tag');
                 })
-                ->pluck('slug');
+                ->pluck('name');
     }
 }
