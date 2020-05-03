@@ -119,25 +119,25 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
             $i = 0;
             foreach ($this->data['taxonomies'] as $key_user => $taxonomy) 
             {
-                if(Auth::user()->can('read-taxonomy', $taxonomy))
+                $data[$i][0] = $taxonomy->getKey();
+                $data[$i][1] = $taxonomy->term->name;
+                $data[$i][2] = $taxonomy->taxonomy;
+
+                if(!empty($taxonomy->parent))
                 {
-                    $data[$i][0] = $taxonomy->getKey();
-                    $data[$i][1] = $taxonomy->term->name;
-                    $data[$i][2] = $taxonomy->taxonomy;
-
-                    if(!empty($taxonomy->parent))
-                    {
-                        $data[$i][3] = '<span class="badge badge-danger">'.$taxonomy->parent->term->name.'</span>';
-                    }
-                    else
-                    {
-                        $data[$i][3] = '-';
-                    }
-
-                    $data[$i][4] = $taxonomy->created_at->toDateTimeString();
-                    $data[$i][5] = $this->getActionTable($taxonomy);
-                    $i++;
+                    $data[$i][3] = '<span class="badge badge-danger">'.$taxonomy->parent->term->name.'</span>';
                 }
+                else
+                {
+                    $data[$i][3] = '-';
+                }
+
+                $data[$i][4] = $taxonomy->created_at->toDateTimeString();
+                $data[$i][5] = $this->getActionTable($taxonomy);
+                $i++;
+                /*if(Auth::user()->can('read-taxonomy', $taxonomy))
+                {
+                }*/
             }
         
         /*=====  End of Parsing Datatable  ======*/
