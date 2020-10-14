@@ -14,9 +14,9 @@ class ChangeParentForeignTaxonomyTable extends Migration
     public function up()
     {
         Schema::table('term_taxonomy', function (Blueprint $table) {
-            $foreignKeys = $this->listTableForeignKeys('term_taxonomy');
+            $foreignKeys = $this->listTableForeignKeys(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getTableWithPrefix());
 
-            if(in_array('term_taxonomy_parent_id_foreign', $foreignKeys)) $table->dropForeign('term_taxonomy_parent_id_foreign');
+            if(in_array(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getTableWithPrefix().'_parent_id_foreign', $foreignKeys)) $table->dropForeign(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getTableWithPrefix().'_parent_id_foreign');
 
             $table->foreign('parent_id')->references(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey())->on('term_taxonomy')->onDelete('cascade')->onUpdate('cascade');
         });

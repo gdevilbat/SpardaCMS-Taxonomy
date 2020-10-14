@@ -94,12 +94,12 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
         if($searchValue)
         {
             $filtered->where(function($query) use ($searchValue){
-                         $query->where(DB::raw("CONCAT(".Taxonomy_m::getTableName().".taxonomy,'-',".Taxonomy_m::getTableName().".created_at)"), 'like', '%'.$searchValue.'%')
+                         $query->where(DB::raw("CONCAT(".Taxonomy_m::getTableWithPrefix().".taxonomy,'-',".Taxonomy_m::getTableWithPrefix().".created_at)"), 'like', '%'.$searchValue.'%')
                              ->orWhereHas('term', function($query) use ($searchValue){
-                                $query->where(DB::raw("CONCAT(".Terms_m::getTableName().".name,'-',".Terms_m::getTableName().".slug)"), 'like', '%'.$searchValue.'%');
+                                $query->where(DB::raw("CONCAT(".Terms_m::getTableWithPrefix().".name,'-',".Terms_m::getTableWithPrefix().".slug)"), 'like', '%'.$searchValue.'%');
                              })
                              ->orWhereHas('parent.term', function($query) use ($searchValue){
-                                $query->where(DB::raw("CONCAT(".Terms_m::getTableName().".name,'-',".Terms_m::getTableName().".slug)"), 'like', '%'.$searchValue.'%');
+                                $query->where(DB::raw("CONCAT(".Terms_m::getTableWithPrefix().".name,'-',".Terms_m::getTableWithPrefix().".slug)"), 'like', '%'.$searchValue.'%');
                              });
                     });
         }

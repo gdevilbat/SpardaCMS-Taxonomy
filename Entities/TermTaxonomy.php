@@ -61,12 +61,17 @@ class TermTaxonomy extends Model
         return $slug.$child_slug;
     }
 
-    public static function getTableName()
+    final static function getTableName()
     {
         return with(new Static)->getTable();
     }
 
-    public static function getPrimaryKey()
+    final static function getTableWithPrefix()
+    {
+        return with(new Static)->getConnection()->getTablePrefix().with(new Static)->getTable();
+    }
+
+    final static function getPrimaryKey()
     {
         return with(new Static)->getKeyName();
     }
