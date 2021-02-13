@@ -72,7 +72,7 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
         $column = [\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey(), 'name', 'taxonomy', 'parent_name', 'created_at'];
 
         $length = !empty($request->input('length')) ? $request->input('length') : 10 ;
-        $column = !empty($request->input('order.0.column')) ? $column[$request->input('order.0.column')] : \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey() ;
+        $column = $request->input('order.0.column') != null ? $column[$request->input('order.0.column')] : \Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy::getPrimaryKey() ;
         $dir = !empty($request->input('order.0.dir')) ? $request->input('order.0.dir') : 'DESC' ;
         $searchValue = $request->input('search')['value'];
 
