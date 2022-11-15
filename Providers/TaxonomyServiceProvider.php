@@ -62,7 +62,7 @@ class TaxonomyServiceProvider extends ServiceProvider
     {
         $viewPath = resource_path('views/modules/taxonomy');
 
-        $sourcePath = __DIR__.'/../resources/views';
+        $sourcePath = __DIR__.'/../Resources/views';
 
         $this->publishes([
             $sourcePath => $viewPath
@@ -85,7 +85,7 @@ class TaxonomyServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'taxonomy');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../resources/lang', 'taxonomy');
+            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'taxonomy');
         }
     }
 
