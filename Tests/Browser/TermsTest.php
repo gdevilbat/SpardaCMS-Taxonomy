@@ -18,7 +18,7 @@ class TermsTest extends DuskTestCase
      */
     public function testCreateTerms()
     {
-        $user = \App\User::find(1);
+        $user = \App\Models\User::find(1);
         $faker = \Faker\Factory::create();
 
         $this->browse(function (Browser $browser) use ($user, $faker) {
@@ -45,7 +45,7 @@ class TermsTest extends DuskTestCase
      */
     public function testEditTerms()
     {
-        $user = \App\User::find(1);
+        $user = \App\Models\User::find(1);
         $faker = \Faker\Factory::create();
 
         $this->browse(function (Browser $browser) use ($user, $faker) {
@@ -72,7 +72,7 @@ class TermsTest extends DuskTestCase
      */
     public function testDeleteTerms()
     {
-        $user = \App\User::find(1);
+        $user = \App\Models\User::find(1);
 
         $faker = \Faker\Factory::create();
 

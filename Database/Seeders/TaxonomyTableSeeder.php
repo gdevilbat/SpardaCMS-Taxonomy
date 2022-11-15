@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use DB;
 
+use Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermTaxonomy;
+
 class TaxonomyTableSeeder extends Seeder
 {
     /**
@@ -18,21 +20,24 @@ class TaxonomyTableSeeder extends Seeder
     {
         Model::unguard();
 
-        DB::table('term_taxonomy')->insert([
+        TermTaxonomy::firstOrCreate(
+            [ 'taxonomy' => 'category'],
             [
                 'term_id' => 1,
-                'taxonomy' => 'category',
                 'created_by' => 1,
                 'modified_by' => 1,
                 'created_at' => \Carbon\Carbon::now()
             ],
+        );
+
+        TermTaxonomy::firstOrCreate(
+            [ 'taxonomy' => 'tag'],
             [
                 'term_id' => 1,
-                'taxonomy' => 'tag',
                 'created_by' => 1,
                 'modified_by' => 1,
                 'created_at' => \Carbon\Carbon::now()
             ]
-        ]);
+        );
     }
 }

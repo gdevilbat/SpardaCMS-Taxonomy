@@ -18,7 +18,7 @@ class TaxonomyTest extends DuskTestCase
      */
     public function testCreateTaxonomy()
     {
-        $user = \App\User::find(1);
+        $user = \App\Models\User::find(1);
         $faker = \Faker\Factory::create();
 
         $this->browse(function (Browser $browser) use ($user, $faker) {
@@ -47,7 +47,7 @@ class TaxonomyTest extends DuskTestCase
      */
     public function testEditTaxonomy()
     {
-        $user = \App\User::find(1);
+        $user = \App\Models\User::find(1);
         $faker = \Faker\Factory::create();
 
         $this->browse(function (Browser $browser) use ($user, $faker) {
@@ -78,7 +78,7 @@ class TaxonomyTest extends DuskTestCase
      */
     public function testDeleteTaxonomy()
     {
-        $user = \App\User::find(1);
+        $user = \App\Models\User::find(1);
 
         $faker = \Faker\Factory::create();
 

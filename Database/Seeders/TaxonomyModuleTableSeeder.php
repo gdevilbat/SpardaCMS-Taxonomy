@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 use DB;
+use Gdevilbat\SpardaCMS\Modules\Core\Entities\Module;
 
 class TaxonomyModuleTableSeeder extends Seeder
 {
@@ -18,14 +19,14 @@ class TaxonomyModuleTableSeeder extends Seeder
     {
         Model::unguard();
 
-        DB::table('module')->insert([
+        Module::firstOrCreate(
+            ['slug' => 'taxonomy'],
             [
                 'name' => 'Taxonomy',
-                'slug' => 'taxonomy',
-                'scope' => json_encode(array('menu', 'create', 'read', 'update', 'delete')),
+                'scope' => array('menu', 'create', 'read', 'update', 'delete'),
                 'is_scanable' => '1',
                 'created_at' => \Carbon\Carbon::now()
             ]
-        ]);
+        );
     }
 }

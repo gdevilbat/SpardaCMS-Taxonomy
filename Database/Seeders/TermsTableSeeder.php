@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use DB;
 
+use Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms;
+
 class TermsTableSeeder extends Seeder
 {
     /**
@@ -18,14 +20,14 @@ class TermsTableSeeder extends Seeder
     {
         Model::unguard();
 
-        DB::table('terms')->insert([
+        Terms::firstOrCreate(
+            ['slug' => 'uncategorized'],
             [
                 'name' => 'Uncategorized',
-                'slug' => 'uncategorized',
                 'created_by' => 1,
                 'modified_by' => 1,
                 'created_at' => \Carbon\Carbon::now()
             ]
-        ]);
+        );
     }
 }
