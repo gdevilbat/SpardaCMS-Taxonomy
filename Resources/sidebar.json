@@ -1,0 +1,17 @@
+[
+    {
+        "text": "Taxonomies",
+        "type": "dropdown",
+        "icon": "fa fa-project-diagram",
+        "childrens": [
+            {
+                "text": "Terms",
+                "name": "terms-master"
+            },
+            {
+                "text": "Taxonomy",
+                "name": "taxonomy-master"
+            }
+        ]
+    }
+]
