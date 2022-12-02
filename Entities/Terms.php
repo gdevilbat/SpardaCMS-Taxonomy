@@ -12,6 +12,11 @@ class Terms extends Model
     protected $table = 'terms';
     protected $primaryKey = 'id_terms';
 
+    protected $appends = [
+        'primary_key',
+        'encrypted_id',
+    ];
+
     /**
      * Set the user's Slug.
      *
@@ -36,6 +41,16 @@ class Terms extends Model
     public function termMeta()
     {
         return $this->hasMany('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\TermMeta', 'term_id');
+    }
+
+    public function getPrimaryKeyAttribute()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public function getEncryptedIdAttribute()
+    {
+        return encrypt($this->getKey());
     }
 
     final static function getTableName()

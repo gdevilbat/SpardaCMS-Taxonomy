@@ -50,6 +50,9 @@ Route::group(['prefix' => 'control', 'middleware' => 'core.auth'], function() {
 			    Route::delete('form', 'TermsController@destroy')->name('terms');
 			});
 
+			Route::post('data', 'TermsController@data')->middleware('can:menu-taxonomy');
+			Route::post('show', 'TermsController@show');
+
 		    Route::group(['prefix' => 'api'], function() {
 			    Route::get('master', 'TermsController@serviceMaster');
 		    });

@@ -4,6 +4,7 @@ namespace Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 use Gdevilbat\SpardaCMS\Modules\Core\Http\Controllers\CoreController;
 
@@ -31,6 +32,35 @@ class TermsController extends CoreController
     public function index()
     {
         return view('taxonomy::admin.'.$this->data['theme_cms']->value.'.content.Terms.master', $this->data);
+    }
+
+    public function data(Request $request)
+    {
+        $length = $request->input('length');
+        $column = $request->input('column');
+        $dir = $request->input('dir');
+        $searchValue = $request->input('search');
+
+        $query = $this->terms_m->leftJoin(Terms_m::getTableName().' as group', 'group.'.Terms_m::getPrimaryKey(), '=', Terms_m::getTableName().'.term_group')
+                        ->with('group')
+                        ->orderBy($column, $dir)
+                        ->select(Terms_m::getTableName().'.*', 'group.name as parent_name');
+
+        if($searchValue)
+        {
+            $query->where(DB::raw("CONCAT(".Terms_m::getTableWithPrefix().".name,'-',".Terms_m::getTableWithPrefix().".slug,'-',".Terms_m::getTableWithPrefix().".created_at)"), 'like', '%'.$searchValue.'%');
+        }
+
+        $data = $query->paginate($length);
+
+        $data->each(function ($taxonomy) {
+            $taxonomy->permissions = [
+                'update' => Auth::user()->can('update-taxonomy', $taxonomy),
+                'delete' => Auth::user()->can('delete-taxonomy', $taxonomy),
+            ];
+        });
+
+        return new DataTableCollectionResource($data);
     }
 
     public function serviceMaster(Request $request)
@@ -187,22 +217,54 @@ class TermsController extends CoreController
         {
             if($request->isMethod('POST'))
             {
-                return redirect(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@index'))->with('global_message', array('status' => 200,'message' => 'Successfully Add Term!'));
+                if($request->ajax()){
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Successfully Add Term!',
+                        'code' => 200
+                    ]);
+                }else{
+                    return redirect(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@index'))->with('global_message', array('status' => 200,'message' => 'Successfully Add Term!'));
+                }
             }
             else
             {
-                return redirect(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@index'))->with('global_message', array('status' => 200,'message' => 'Successfully Update Term!'));
+                if($request->ajax()){
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Successfully Update Term!',
+                        'code' => 200
+                    ]);
+                }else{
+                    return redirect(action('\Gdevilbat\SpardaCMS\Modules\Taxonomy\Http\Controllers\TermsController@index'))->with('global_message', array('status' => 200,'message' => 'Successfully Update Term!'));
+                }
             }
         }
         else
         {
             if($request->isMethod('POST'))
             {
-                return redirect()->back()->with('global_message', array('status' => 400, 'message' => 'Failed To Add Term!'));
+                if($request->ajax()){
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Failed To Add Term!',
+                        'code' => 400
+                    ]);
+                }else{
+                    return redirect()->back()->with('global_message', array('status' => 400, 'message' => 'Failed To Add Term!'));
+                }
             }
             else
             {
-                return redirect()->back()->with('global_message', array('status' => 400, 'message' => 'Failed To Update Term!'));
+                if($request->ajax()){
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Failed To Update Term!',
+                        'code' => 400
+                    ]);
+                }else{
+                    return redirect()->back()->with('global_message', array('status' => 400, 'message' => 'Failed To Update Term!'));
+                }
             }
         }
     }
@@ -212,9 +274,35 @@ class TermsController extends CoreController
      * @param int $id
      * @return Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        return view('taxonomy::show');
+        
+        if($request->has('code')){
+            $taxonomy = $this->terms_m->with('group')->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(), decrypt($request->code))->first();;
+            $this->authorize('update-taxonomy', $taxonomy);
+
+            if(empty($taxonomy->group)){
+                $taxonomy->unsetRelation('group');
+                $taxonomy->group = [];
+            }
+
+            $data = [
+                'taxonomy' => $taxonomy,
+                'groups' => $this->terms_m->where(\Gdevilbat\SpardaCMS\Modules\Taxonomy\Entities\Terms::getPrimaryKey(), '!=', decrypt($request->code))->get()
+            ];
+        }else{
+            $data = [
+                'taxonomy' => [
+                    'group' => []
+                ],
+                'groups' => $this->terms_m->all()
+            ];
+        }
+
+        return response([
+            'status' => true,
+            'data' => $data
+        ]);
     }
 
     /**
@@ -230,11 +318,27 @@ class TermsController extends CoreController
         try {
             if($query->delete())
             {
-                return redirect()->back()->with('global_message', array('status' => 200,'message' => 'Successfully Delete Term!'));
+                if($request->ajax()){
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Successfully Delete Term!',
+                        'code' => 200
+                    ]);
+                }else{
+                    return redirect()->back()->with('global_message', array('status' => 200,'message' => 'Successfully Delete Term!'));
+                }
             }
             
         } catch (\Exception $e) {
-            return redirect()->back()->with('global_message', array('status' => 200,'message' => 'Failed Delete Term, It\'s Has Been Used!'));
+            if($request->ajax()){
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Failed Delete Term, It\'s Has Been Used!',
+                    'code' => 400
+                ]);
+            }else{
+                return redirect()->back()->with('global_message', array('status' => 200,'message' => 'Failed Delete Term, It\'s Has Been Used!'));
+            }
         }
     }
 }

@@ -41,6 +41,50 @@ abstract class AbstractTaxonomy extends CoreController implements InterfaceTaxon
         return view($this->getModule().'::admin.'.$this->data['theme_cms']->value.'.content.'.$this->getModDir().'.master', $this->data);
     }
 
+    public function data(Request $request)
+    {
+        $length = $request->input('length');
+        $column = $request->input('column');
+        $dir = $request->input('dir');
+        $searchValue = $request->input('search');
+
+        $query = $this->taxonomy_m->leftJoin(Terms_m::getTableName(), Terms_m::getTableName().'.'.Terms_m::getPrimaryKey(), '=', Taxonomy_m::getTableName().'.term_id')
+                ->leftJoin(Taxonomy_m::getTableName().' as child', Taxonomy_m::getTableName().'.parent_id', '=', 'child.'.Taxonomy_m::getPrimaryKey())
+                ->leftJoin(Terms_m::getTableName().' as parent', 'child.term_id', '=', 'parent.'.Terms_m::getPrimaryKey())
+                ->with(['term', 'parent.term'])
+                ->select(Taxonomy_m::getTableName().'.*', Terms_m::getTableName().'.name', 'parent.name as parent_name')
+                ->orderBy($column, $dir);
+
+        if(!empty($this->taxonomy))
+        {
+            $query = $query->where(Taxonomy_m::getTableName().'.taxonomy', $this->getTaxonomy());
+        }
+
+        if($searchValue)
+        {
+            $query->where(function($query) use ($searchValue){
+                $query->where(DB::raw("CONCAT(".Taxonomy_m::getTableWithPrefix().".taxonomy,'-',".Taxonomy_m::getTableWithPrefix().".created_at)"), 'like', '%'.$searchValue.'%')
+                    ->orWhereHas('term', function($query) use ($searchValue){
+                       $query->where(DB::raw("CONCAT(".Terms_m::getTableWithPrefix().".name,'-',".Terms_m::getTableWithPrefix().".slug)"), 'like', '%'.$searchValue.'%');
+                    })
+                    ->orWhereHas('parent.term', function($query) use ($searchValue){
+                       $query->where(DB::raw("CONCAT(".Terms_m::getTableWithPrefix().".name,'-',".Terms_m::getTableWithPrefix().".slug)"), 'like', '%'.$searchValue.'%');
+                    });
+           });
+        }
+
+        $data = $query->paginate($length);
+
+        $data->each(function ($taxonomy) {
+            $taxonomy->permissions = [
+                'update' => Auth::user()->can('update-taxonomy', $taxonomy),
+                'delete' => Auth::user()->can('delete-taxonomy', $taxonomy),
+            ];
+        });
+
+        return new DataTableCollectionResource($data);
+    }
+
     /**
      * Show the form for creating a new resource.
      * @return Response
